@@ -1,0 +1,21 @@
+<form action="" (ngSubmit)="searchData()" [formGroup]="searchForm">
+    <input type="text"  formControlName="name">
+<button type="submit">Buscar</button>
+
+@if(searchActive){
+    <button (click)="reloadBooks()">Volver</button>
+}
+
+</form>
+<button routerLink="/admin/addbook">Agregar Nuevo Libro</button>
+<button routerLink="/admin/loanpages">Prestamos</button>
+<button routerLink="/admin/loanEnd">Prestamos Vencidos</button>
+
+<button (click)="logout()">Cerrar sesion</button>
+
+@for (element of book; track element.id) {
+    <app-book-card [book]="element" ></app-book-card>
+}
+
+
+
