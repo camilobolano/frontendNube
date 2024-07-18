@@ -12,12 +12,22 @@ import { map, Observable, of, switchMap } from 'rxjs';
 })
 export class AuthService {
 
+  token: string | null = null;
+
   private baseUrl = environment.API_URL + "UsersControllers";
   private router = inject(Router);
 
   private tokenSevice = inject(TokenService);
 
   constructor(private http: HttpClient) { }
+
+  setToken(token: string) {
+    this.token = token;
+  }
+
+  getToken(): string | null {
+    return this.token
+  }
 
   login (loginData : ILogin): Observable <IResponse>{
     return this.http.post<IResponse>(`${this.baseUrl}/login`,loginData).pipe(
@@ -35,7 +45,8 @@ export class AuthService {
         if(!token) return of({isExitoso: false, mensaje : 'no token received'});
         const tokenDecoded = this.tokenSevice.decodeToken(token);
         console.log('token info', tokenDecoded);
-        
+
+        this.setToken(token)
        
 
         return this.tokenSevice.storeTokenInCookies(token).pipe(
@@ -50,7 +61,9 @@ export class AuthService {
   }
 
   logout(): void {
-    this.tokenSevice.deleteTokenFromCookies();
-    this.router.navigate(['/auth/login']);
+
+    this.token = null
+    /* this.tokenSevice.deleteTokenFromCookies(); */
+    this.router.navigate(['/auth/login']); 
   }
 }
